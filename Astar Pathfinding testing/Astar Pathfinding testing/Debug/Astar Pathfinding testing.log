@@ -1,1 +1,4 @@
-﻿  Astar Pathfinding testing.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\Tile-Pathfinding-Experimentation\Astar Pathfinding testing\Debug\Astar Pathfinding testing.exe
+﻿  Game.cpp
+c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(21): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(97): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Astar Pathfinding testing.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\Tile-Pathfinding-Experimentation\Astar Pathfinding testing\Debug\Astar Pathfinding testing.exe
