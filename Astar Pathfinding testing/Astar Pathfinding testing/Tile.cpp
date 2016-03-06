@@ -43,10 +43,20 @@ void Tile::Update()
 {
 	mShape.setPosition(mPosition);
 	mHitBox.top = mPosition.y;
+	mStart = false;
+	mGoal = false;
 }
 
 void Tile::Render()
 {
+	if (mStart)
+		mShape.setFillColor(sf::Color::Yellow);
+	else if (mGoal)
+		mShape.setFillColor(sf::Color::Green);
+	else if (mType == 0)
+		SetType(0);
+	else if (mType == 1)
+		SetType(1);
 	window->draw(mShape);
 }
 
@@ -86,6 +96,16 @@ void Tile::SetOccupied(bool occupied)
 void Tile::SetPosition(sf::Vector2f newPosition)
 {
 	mPosition = newPosition;
+}
+
+void Tile::SetStart(bool start)
+{
+	mStart = start;
+}
+
+void Tile::SetGoal(bool goal)
+{
+	mGoal = goal;
 }
 
 int Tile::GetType() { return mType; }

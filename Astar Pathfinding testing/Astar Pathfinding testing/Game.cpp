@@ -8,6 +8,7 @@ static bool focus = true, mouseReleased = true;
 typedef vector<Tile*> TileRow;
 typedef vector<TileRow> TileMap;
 static TileMap tileMap;
+static Tile *startTile, *targetTile;
 typedef vector<Entity*> EntityVector;
 static EntityVector entityVector;
 
@@ -15,9 +16,22 @@ static sf::Vector2i mousePosition;
 
 sf::Font font;
 
-sf::RectangleShape hexButton, fourButton, eightButton, stepButton;
-sf::Text hexButtonText, fourButtonText, eightButtonText, stepButtonText;
-sf::IntRect hexButtonBox, fourButtonBox, eightButtonBox, stepButtonBox;
+struct Button
+{
+	sf::RectangleShape shape;
+	sf::Text text;
+	sf::IntRect box;
+};
+
+Button hexButton, fourButton, eightButton, stepButton, resetButton, wallButton, targetButton;
+
+enum GameState
+{
+	WALLS,
+	TARGETS
+};
+
+GameState gameState = WALLS;
 
 Game::Game()
 {
@@ -80,36 +94,61 @@ void Game::Update()
 			{
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
-					tileMap[y][x]->SetType(0);
+					if (gameState == WALLS)
+						tileMap[y][x]->SetType(0);
+					if (gameState == TARGETS && tileMap[y][x]->GetType() != 1)
+					{
+						startTile = tileMap[y][x];
+					}
 				}
 				else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 				{
-					tileMap[y][x]->SetType(1);
+					if (gameState == WALLS && tileMap[y][x] != startTile && tileMap[y][x] != targetTile)
+						tileMap[y][x]->SetType(1);
+					if (gameState == TARGETS && tileMap[y][x]->GetType() != 1)
+					{
+						targetTile = tileMap[y][x];
+					}
 				}
 			}
 			tileMap[y][x]->Update();
 		}
 	}
+	if (startTile != nullptr)
+		startTile->SetStart(true);
+	if (targetTile != nullptr)
+		targetTile->SetGoal(true);
 	
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouseReleased)
 	{
 		mouseReleased = false;
-		if (fourButtonBox.contains(mousePosition))
-		{
+		if (fourButton.box.contains(mousePosition))
 			GridChange(0);
-		}
-		else if (eightButtonBox.contains(mousePosition))
-		{
+		else if (eightButton.box.contains(mousePosition))
 			GridChange(1);
-		}
-		else if (hexButtonBox.contains(mousePosition))
-		{
+		else if (hexButton.box.contains(mousePosition))
 			GridChange(2);
-		}
-		else if (stepButtonBox.contains(mousePosition))
+		else if (stepButton.box.contains(mousePosition))
 		{
 			
 		}
+		else if (resetButton.box.contains(mousePosition))
+		{
+			GridChange(0);
+			for (TileMap::size_type y = 0; y < tileMap.size(); y++)
+			{
+				for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
+				{
+					tileMap[y][x]->SetType(0);
+					startTile = nullptr;
+					targetTile = nullptr;
+				}
+			}
+		}
+		else if (wallButton.box.contains(mousePosition))
+			gameState = WALLS;
+		else if (targetButton.box.contains(mousePosition))
+			gameState = TARGETS;
 	}
 	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		mouseReleased = true;
@@ -128,14 +167,26 @@ void Game::Render()
 		}
 	}
 	window->setView(*uiView);
-	window->draw(fourButton);
-	window->draw(fourButtonText);
-	window->draw(eightButton);
-	window->draw(eightButtonText);
-	window->draw(hexButton);
-	window->draw(hexButtonText);
-	window->draw(stepButton);
-	window->draw(stepButtonText);
+	for (int i = 0; i < 7; i++)
+	{
+		Button *button;
+		if (i == 0)
+			button = &stepButton;
+		else if (i == 1)
+			button = &resetButton;
+		else if (i == 2)
+			button = &wallButton;
+		else if (i == 3)
+			button = &targetButton;
+		else if (i == 4)
+			button = &fourButton;
+		else if (i == 5)
+			button = &eightButton;
+		else
+			button = &hexButton;
+		window->draw(button->shape);
+		window->draw(button->text);
+	}
 	window->display();
 }
 
@@ -170,49 +221,60 @@ void Game::Setup()
 	}
 
 	//Setup UI
-	fourButton.setFillColor(sf::Color::Red);
-	fourButton.setPosition(sf::Vector2f(screenWidth - 150, 40));
-	fourButton.setSize(sf::Vector2f(100, 50));
-	fourButtonText.setString("Four");
-	fourButtonText.setFont(font);
-	fourButtonText.setPosition(fourButton.getPosition());
-	fourButtonBox.width = 100;
-	fourButtonBox.height = 50;
-	fourButtonBox.left = screenWidth - 150;
-	fourButtonBox.top = 40;
+	for (int i = 0; i < 7; i++)
+	{
+		Button *button;
+		if (i == 0)
+		{
+			button = &stepButton;
+			button->text.setString("Step");
+		}
+		else if (i == 1)
+		{
+			button = &resetButton;
+			button->text.setString("Reset");
+		}
+		else if (i == 2)
+		{
+			button = &wallButton;
+			button->text.setString("Walls");
+		}
+		else if (i == 3)
+		{
+			button = &targetButton;
+			button->text.setString("Targets");
+		}
+		else if (i == 4)
+		{
+			button = &fourButton;
+			button->text.setString("Four");
+		}
+		else if (i == 5)
+		{
+			button = &eightButton;
+			button->text.setString("Eight");
+		}
+		else
+		{
+			button = &hexButton;
+			button->text.setString("Hex");
+		}
 
-	eightButton.setFillColor(sf::Color::Red);
-	eightButton.setPosition(sf::Vector2f(screenWidth - 150, 100));
-	eightButton.setSize(sf::Vector2f(100, 50));
-	eightButtonText.setString("Eight");
-	eightButtonText.setFont(font);
-	eightButtonText.setPosition(eightButton.getPosition());
-	eightButtonBox.width = 100;
-	eightButtonBox.height = 50;
-	eightButtonBox.left = screenWidth - 150;
-	eightButtonBox.top = 100;
-
-	hexButton.setFillColor(sf::Color::Red);
-	hexButton.setPosition(sf::Vector2f(screenWidth - 150, 160));
-	hexButton.setSize(sf::Vector2f(100, 50));
-	hexButtonText.setString("Hex");
-	hexButtonText.setFont(font);
-	hexButtonText.setPosition(hexButton.getPosition());
-	hexButtonBox.width = 100;
-	hexButtonBox.height = 50;
-	hexButtonBox.left = screenWidth - 150;
-	hexButtonBox.top = 160;
-
-	stepButton.setFillColor(sf::Color::Blue);
-	stepButton.setPosition(sf::Vector2f(screenWidth - 300, 40));
-	stepButton.setSize(sf::Vector2f(100, 50));
-	stepButtonText.setString("Step");
-	stepButtonText.setFont(font);
-	stepButtonText.setPosition(stepButton.getPosition());
-	stepButtonBox.width = 100;
-	stepButtonBox.height = 50;
-	stepButtonBox.left = screenWidth - 300;
-	stepButtonBox.top = 40;
+		if (i > 3)
+			button->shape.setFillColor(sf::Color::Red);
+		else if (i < 2)
+			button->shape.setFillColor(sf::Color::Black);
+		else
+			button->shape.setFillColor(sf::Color::Blue);
+		button->shape.setPosition(sf::Vector2f(screenWidth - 300, 40 + i * 60));
+		button->shape.setSize(sf::Vector2f(100, 50));
+		button->text.setFont(font);
+		button->text.setPosition(button->shape.getPosition());
+		button->box.width = 100;
+		button->box.height = 50;
+		button->box.left = button->shape.getPosition().x;
+		button->box.top = button->shape.getPosition().y;
+	}
 }
 
 void Game::GridChange(int type)

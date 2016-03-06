@@ -18,6 +18,8 @@ public:
 	void SetNeighbor(Tile *tile);
 	void SetOccupied(bool occupied);
 	void SetPosition(sf::Vector2f newPosition);
+	void SetStart(bool start);
+	void SetGoal(bool goal);
 	int GetType();
 	vector<Tile*> GetNeighbors();
 	bool GetOccupied();
@@ -27,7 +29,7 @@ private:
 	int mType = 0;
 	vector<Tile*> mNeighborsVector;
 	sf::RectangleShape mShape;
-	bool mOccupied = false;
+	bool mOccupied = false, mStart = false, mGoal = false;
 	sf::IntRect mHitBox;
 };
 
