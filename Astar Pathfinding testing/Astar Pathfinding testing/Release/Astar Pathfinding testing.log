@@ -1,6 +1,13 @@
-﻿  Game.cpp
+﻿  Entity.cpp
+  Game.cpp
+Game.cpp(21): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+Game.cpp(97): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Main.cpp
+  Tile.cpp
+Tile.cpp(9): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Generating code
-  All 7 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  220 of 223 functions (98.7%) were compiled, the rest were copied from previous compilation.
+    216 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Astar Pathfinding testing.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\Tile-Pathfinding-Experimentation\Astar Pathfinding testing\Release\Astar Pathfinding testing.exe
