@@ -21,6 +21,9 @@ private:
 	void Render();
 	void Setup();
 	void GridChange(int type);
+	vector<Tile*> Pathfind();
+	int GetDistanceCost(Tile *tile1, Tile *tile2);
+	int CheckPathLength(Tile *tile, int oldLength);
 };
 
 #endif

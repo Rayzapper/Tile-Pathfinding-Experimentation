@@ -33,6 +33,15 @@ enum GameState
 
 GameState gameState = WALLS;
 
+enum GridType
+{
+	FOUR,
+	EIGHT,
+	HEX
+};
+
+GridType gridType = FOUR;
+
 Game::Game()
 {
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Pathfinding Testing");
@@ -282,6 +291,7 @@ void Game::GridChange(int type)
 	if (type == 0)
 	{
 		cout << "four" << endl;
+		gridType = FOUR;
 		for (TileMap::size_type y = 0; y < tileMap.size(); y++)
 		{
 			for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
@@ -302,6 +312,7 @@ void Game::GridChange(int type)
 	if (type == 1)
 	{
 		cout << "eight" << endl;
+		gridType = EIGHT;
 		for (TileMap::size_type y = 0; y < tileMap.size(); y++)
 		{
 			for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
@@ -338,6 +349,7 @@ void Game::GridChange(int type)
 	if (type == 2)
 	{
 		cout << "hex" << endl;
+		gridType = HEX;
 		for (TileMap::size_type y = 0; y < tileMap.size(); y++)
 		{
 			for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
@@ -390,7 +402,134 @@ void Game::GridChange(int type)
 							tileMap[y][x]->SetNeighbor(tileMap[y + 1][x + 1]);
 					}
 				}
+
+				//////////////////////////////////////////////////////////////////////
+				int xDifference, yDifference, distanceCost = 0;
+				xDifference = startTile->GetGridPosition().x - tileMap[y][x]->GetGridPosition().x;
+				xDifference = abs(xDifference);
+				yDifference = startTile->GetGridPosition().y - tileMap[y][x]->GetGridPosition().y;
+				yDifference = abs(yDifference);
+				if (startTile->GetGridPosition().x % 2 == 0)
+				{
+
+				}
+				tileMap[y][x]->testInt = distanceCost;
+				//////////////////////////////////////////////////////////////////////
 			}
 		}
 	}
+}
+
+vector<Tile*> Game::Pathfind()
+{
+	vector<Tile*> path,	//Final path.
+		open,			//Nodes whose F cost has been calculated.
+		closed;			//Nodes that have been evaluated.
+	startTile->SetPathValues(0, GetDistanceCost(startTile, targetTile));
+	open.push_back(startTile);
+	while (false)
+	{
+		Tile *current = open[0];
+
+		for (vector<Tile*>::size_type i = 0; i < open.size(); i++)
+		{
+			if (open[i]->GetPathValues().fCost < current->GetPathValues().fCost)
+				current = open[i];
+		}
+
+		open.erase(find(open.begin(), open.end(), current));
+
+		closed.push_back(current);
+
+		if (current == targetTile)
+			break;
+
+		for each (Tile* neighbor in current->GetNeighbors())
+		{
+			int newPathLength = CheckPathLength(current, 0);
+			if (gridType == EIGHT && current->GetGridPosition().x != neighbor->GetGridPosition().x
+				&& current->GetGridPosition().y != neighbor->GetGridPosition().y)
+				newPathLength += 14;
+			else
+				newPathLength += 10;
+			if (neighbor->GetType() == 1 || find(closed.begin(), closed.end(), neighbor) != closed.end())
+				; //Skip
+			else if (newPathLength < CheckPathLength(neighbor, 0) || find(open.begin(), open.end(), neighbor) == open.end())
+			{
+
+			}
+		}
+	}
+
+	for each (Tile* t in open)
+	{
+		t->SetPathParent(nullptr);
+		t->SetPathValues(0, 0);
+	}
+	for each (Tile* t in closed)
+	{
+		t->SetPathParent(nullptr);
+		t->SetPathValues(0, 0);
+	}
+
+	return path;
+}
+
+int Game::GetDistanceCost(Tile *tile1, Tile *tile2)
+{
+	int distanceCost, tile1X, tile1Y, tile2X, tile2Y;
+	tile1X = tile1->GetGridPosition().x;
+	tile1Y = tile1->GetGridPosition().y;
+	tile2X = tile2->GetGridPosition().x;
+	tile2Y = tile2->GetGridPosition().y;
+	if (gridType == FOUR)
+	{
+		int xCost, yCost;
+		xCost = tile1X - tile2X;
+		xCost = abs(xCost);
+		yCost = tile1Y - tile2Y;
+		yCost = abs(yCost);
+		distanceCost = (xCost + yCost) * 10;
+	}
+	else if (gridType == EIGHT)
+	{
+		int xCost, yCost, diaCost = 0;
+		xCost = tile1X - tile2X;
+		xCost = abs(xCost);
+		yCost = tile1Y - tile2Y;
+		yCost = abs(yCost);
+		while (xCost > 0 && yCost > 0)
+		{
+			xCost--;
+			yCost--;
+			diaCost++;
+		}
+		distanceCost = (xCost + yCost) * 10 + diaCost * 14;
+	}
+	else if (gridType == HEX)
+	{
+		int xDifference, yDifference;
+		xDifference = tile1X - tile2X;
+		xDifference = abs(xDifference);
+		yDifference = tile1Y - tile2Y;
+		yDifference = abs(yDifference);
+		//I AM TESTING THIS ELSEWHERE
+	}
+	return distanceCost;
+}
+
+int Game::CheckPathLength(Tile *tile, int oldLength)
+{
+	int length = oldLength;
+	Tile *parent = tile->GetPathParent();
+	if (parent != nullptr)
+	{
+		if (gridType == EIGHT && tile->GetGridPosition().x != parent->GetGridPosition().x
+			&& tile->GetGridPosition().y != parent->GetGridPosition().y)
+			length += 14;
+		else
+			length += 10;
+		length = CheckPathLength(parent, length);
+	}
+	return length;
 }

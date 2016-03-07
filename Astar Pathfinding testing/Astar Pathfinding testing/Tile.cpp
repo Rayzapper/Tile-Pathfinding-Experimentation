@@ -6,6 +6,9 @@ static int tileSize;
 Tile::Tile(int type, sf::Vector2f position)
 	:mType(type), mPosition(position)
 {
+	testFont.loadFromFile("Resources/calibri.ttf");
+	mGridPosition.x = mPosition.x / tileSize;
+	mGridPosition.y = mPosition.y / tileSize;
 	mShape.setSize(sf::Vector2f(tileSize, tileSize));
 	sf::Color color, colorOutline;
 	if (mType == 0)
@@ -26,6 +29,10 @@ Tile::Tile(int type, sf::Vector2f position)
 	mHitBox.width = tileSize;
 	mHitBox.left = mPosition.x;
 	mHitBox.top = mPosition.y;
+
+	testText.setColor(sf::Color::Black);
+	testText.setPosition(mPosition.x, mPosition.y);
+	testText.setFont(testFont);
 }
 
 Tile::~Tile()
@@ -45,6 +52,8 @@ void Tile::Update()
 	mHitBox.top = mPosition.y;
 	mStart = false;
 	mGoal = false;
+	testText.setPosition(mPosition.x, mPosition.y);
+	testText.setString(to_string(testInt));
 }
 
 void Tile::Render()
@@ -58,6 +67,7 @@ void Tile::Render()
 	else if (mType == 1)
 		SetType(1);
 	window->draw(mShape);
+	window->draw(testText);
 }
 
 void Tile::ClearNeighbors()
@@ -108,13 +118,28 @@ void Tile::SetGoal(bool goal)
 	mGoal = goal;
 }
 
+void Tile::SetPathValues(int gCost, int hCost)
+{
+	mPathValues.gCost = gCost;
+	mPathValues.hCost = hCost;
+	mPathValues.fCost = gCost + hCost;
+}
+
+void Tile::SetPathParent(Tile *parent)
+{
+	mPathParent = parent;
+}
+
 int Tile::GetType() { return mType; }
 
 vector<Tile*> Tile::GetNeighbors() { return mNeighborsVector; }
 
 bool Tile::GetOccupied() { return mOccupied; }
 
-bool Tile::GetMouseOver(sf::Vector2i mousePosition)
-{
-	return mHitBox.contains(mousePosition);
-}
+bool Tile::GetMouseOver(sf::Vector2i mousePosition) { return mHitBox.contains(mousePosition); }
+
+sf::Vector2i Tile::GetGridPosition() { return mGridPosition; }
+
+PathValues Tile::GetPathValues() { return mPathValues; }
+
+Tile* Tile::GetPathParent() { return mPathParent; }

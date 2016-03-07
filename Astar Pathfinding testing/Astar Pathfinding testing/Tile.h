@@ -5,6 +5,13 @@
 
 using namespace std;
 
+struct PathValues
+{
+	int gCost, //Distance from starting Node.
+		hCost, //Distance from end Node.
+		fCost; //gCost + hCost.
+};
+
 class Tile
 {
 public:
@@ -20,17 +27,29 @@ public:
 	void SetPosition(sf::Vector2f newPosition);
 	void SetStart(bool start);
 	void SetGoal(bool goal);
+	void SetPathValues(int gCost, int hCost);
+	void SetPathParent(Tile *parent);
 	int GetType();
 	vector<Tile*> GetNeighbors();
 	bool GetOccupied();
 	bool GetMouseOver(sf::Vector2i mousePosition);
+	sf::Vector2i GetGridPosition();
+	PathValues GetPathValues();
+	Tile* GetPathParent();
+
+	int testInt;
+	sf::Text testText;
+	sf::Font testFont;
 private:
 	sf::Vector2f mPosition;
+	sf::Vector2i mGridPosition;
 	int mType = 0;
 	vector<Tile*> mNeighborsVector;
 	sf::RectangleShape mShape;
 	bool mOccupied = false, mStart = false, mGoal = false;
 	sf::IntRect mHitBox;
+	PathValues mPathValues;
+	Tile* mPathParent;
 };
 
 #endif
