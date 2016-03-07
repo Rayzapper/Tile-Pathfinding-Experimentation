@@ -58,7 +58,9 @@ void Tile::Update()
 
 void Tile::Render()
 {
-	if (mStart)
+	if (mPath)
+		mShape.setFillColor(sf::Color::Magenta);
+	else if (mStart)
 		mShape.setFillColor(sf::Color::Yellow);
 	else if (mGoal)
 		mShape.setFillColor(sf::Color::Green);
@@ -67,7 +69,7 @@ void Tile::Render()
 	else if (mType == 1)
 		SetType(1);
 	window->draw(mShape);
-	window->draw(testText);
+	/*window->draw(testText);*/
 }
 
 void Tile::ClearNeighbors()
@@ -130,6 +132,11 @@ void Tile::SetPathParent(Tile *parent)
 	mPathParent = parent;
 }
 
+void Tile::SetPath(bool path)
+{
+	mPath = path;
+}
+
 int Tile::GetType() { return mType; }
 
 vector<Tile*> Tile::GetNeighbors() { return mNeighborsVector; }
@@ -143,3 +150,15 @@ sf::Vector2i Tile::GetGridPosition() { return mGridPosition; }
 PathValues Tile::GetPathValues() { return mPathValues; }
 
 Tile* Tile::GetPathParent() { return mPathParent; }
+
+vector<Tile*> Tile::GetPath(vector<Tile*> path)
+{
+	if (mPathParent != nullptr)
+	{
+		path = mPathParent->GetPath(path);
+		path.push_back(mPathParent);
+		cout << mPathParent << endl;
+		cout << "Added Tile to Path." << endl;
+	}
+	return path;
+}

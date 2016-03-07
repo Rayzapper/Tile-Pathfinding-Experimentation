@@ -2,6 +2,7 @@
 #define TILE_H
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
 	void SetGoal(bool goal);
 	void SetPathValues(int gCost, int hCost);
 	void SetPathParent(Tile *parent);
+	void SetPath(bool path);
 	int GetType();
 	vector<Tile*> GetNeighbors();
 	bool GetOccupied();
@@ -36,6 +38,7 @@ public:
 	sf::Vector2i GetGridPosition();
 	PathValues GetPathValues();
 	Tile* GetPathParent();
+	vector<Tile*> GetPath(vector<Tile*> path);
 
 	int testInt;
 	sf::Text testText;
@@ -46,7 +49,7 @@ private:
 	int mType = 0;
 	vector<Tile*> mNeighborsVector;
 	sf::RectangleShape mShape;
-	bool mOccupied = false, mStart = false, mGoal = false;
+	bool mOccupied = false, mStart = false, mGoal = false, mPath = false;
 	sf::IntRect mHitBox;
 	PathValues mPathValues;
 	Tile* mPathParent;

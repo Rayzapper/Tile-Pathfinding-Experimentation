@@ -139,7 +139,15 @@ void Game::Update()
 			GridChange(2);
 		else if (stepButton.box.contains(mousePosition))
 		{
-			
+			for (TileMap::size_type y = 0; y < tileMap.size(); y++)
+				for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
+					tileMap[y][x]->SetPath(false);
+			vector<Tile*> path = Pathfind(startTile, targetTile);
+			for (vector<Tile*>::size_type i = 0; i < path.size(); i++)
+			{
+				path[i]->SetPath(true);
+				//cout << path[i] << endl;
+			}
 		}
 		else if (resetButton.box.contains(mousePosition))
 		{
@@ -346,91 +354,93 @@ void Game::GridChange(int type)
 			}
 		}
 	}
-	if (type == 2)
-	{
-		cout << "hex" << endl;
-		gridType = HEX;
-		for (TileMap::size_type y = 0; y < tileMap.size(); y++)
-		{
-			for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
-			{
-				tileMap[y][x]->ClearNeighbors();
-				tileMap[y][x]->SetPosition(sf::Vector2f(x * tileSize, y * tileSize + 16 * (x % 2)));
-				if (x % 2 == 0)
-				{
-					if (y > 0)
-					{
-						if (x > 0)
-							tileMap[y][x]->SetNeighbor(tileMap[y - 1][x - 1]);
-						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
-						if (x < tileMap[y].size() - 1)
-							tileMap[y][x]->SetNeighbor(tileMap[y - 1][x + 1]);
-					}
-					if (x > 0)
-					{
-						tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
-					}
-					if (y < tileMap.size() - 1)
-					{
-						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
-					}
-					if (x < tileMap[y].size() - 1)
-					{
-						tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
-					}
-				}
-				else
-				{
-					if (x > 0)
-					{
-						tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
-					}
-					if (y > 0)
-					{
-						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
-					}
-					if (x < tileMap[y].size() - 1)
-					{
-						tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
-					}
-					if (y < tileMap.size() - 1)
-					{
-						if (x > 0)
-							tileMap[y][x]->SetNeighbor(tileMap[y + 1][x - 1]);
-						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
-						if (x < tileMap[y].size() - 1)
-							tileMap[y][x]->SetNeighbor(tileMap[y + 1][x + 1]);
-					}
-				}
+	//if (type == 2)
+	//{
+	//	cout << "hex" << endl;
+	//	gridType = HEX;
+	//	for (TileMap::size_type y = 0; y < tileMap.size(); y++)
+	//	{
+	//		for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
+	//		{
+	//			tileMap[y][x]->ClearNeighbors();
+	//			tileMap[y][x]->SetPosition(sf::Vector2f(x * tileSize, y * tileSize + 16 * (x % 2)));
+	//			if (x % 2 == 0)
+	//			{
+	//				if (y > 0)
+	//				{
+	//					if (x > 0)
+	//						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x - 1]);
+	//					tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
+	//					if (x < tileMap[y].size() - 1)
+	//						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x + 1]);
+	//				}
+	//				if (x > 0)
+	//				{
+	//					tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
+	//				}
+	//				if (y < tileMap.size() - 1)
+	//				{
+	//					tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
+	//				}
+	//				if (x < tileMap[y].size() - 1)
+	//				{
+	//					tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
+	//				}
+	//			}
+	//			else
+	//			{
+	//				if (x > 0)
+	//				{
+	//					tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
+	//				}
+	//				if (y > 0)
+	//				{
+	//					tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
+	//				}
+	//				if (x < tileMap[y].size() - 1)
+	//				{
+	//					tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
+	//				}
+	//				if (y < tileMap.size() - 1)
+	//				{
+	//					if (x > 0)
+	//						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x - 1]);
+	//					tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
+	//					if (x < tileMap[y].size() - 1)
+	//						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x + 1]);
+	//				}
+	//			}
 
-				//////////////////////////////////////////////////////////////////////
-				int xDifference, yDifference, distanceCost = 0;
-				xDifference = startTile->GetGridPosition().x - tileMap[y][x]->GetGridPosition().x;
-				xDifference = abs(xDifference);
-				yDifference = startTile->GetGridPosition().y - tileMap[y][x]->GetGridPosition().y;
-				yDifference = abs(yDifference);
-				if (startTile->GetGridPosition().x % 2 == 0)
-				{
+	//			//////////////////////////////////////////////////////////////////////
+	//			/*int xDifference, yDifference, distanceCost = 0;
+	//			xDifference = startTile->GetGridPosition().x - tileMap[y][x]->GetGridPosition().x;
+	//			xDifference = abs(xDifference);
+	//			yDifference = startTile->GetGridPosition().y - tileMap[y][x]->GetGridPosition().y;
+	//			yDifference = abs(yDifference);
+	//			if (startTile->GetGridPosition().x % 2 == 0)
+	//			{
 
-				}
-				tileMap[y][x]->testInt = distanceCost;
-				//////////////////////////////////////////////////////////////////////
-			}
-		}
-	}
+	//			}
+	//			tileMap[y][x]->testInt = distanceCost;*/
+	//			//////////////////////////////////////////////////////////////////////
+	//		}
+	//	}
+	//}
 }
 
-vector<Tile*> Game::Pathfind()
+vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
 {
-	vector<Tile*> path,	//Final path.
+	vector<Tile*>
 		open,			//Nodes whose F cost has been calculated.
 		closed;			//Nodes that have been evaluated.
-	startTile->SetPathValues(0, GetDistanceCost(startTile, targetTile));
-	open.push_back(startTile);
-	while (false)
-	{
-		Tile *current = open[0];
+	start->SetPathValues(0, GetDistanceCost(start, target));
+	open.push_back(start);
+	bool loop = true;
 
+	Tile *current = start;
+	while (loop)
+	{
+		current = open[0];
 		for (vector<Tile*>::size_type i = 0; i < open.size(); i++)
 		{
 			if (open[i]->GetPathValues().fCost < current->GetPathValues().fCost)
@@ -441,8 +451,11 @@ vector<Tile*> Game::Pathfind()
 
 		closed.push_back(current);
 
-		if (current == targetTile)
+		if (current == target)
+		{
+			loop = false;
 			break;
+		}
 
 		for each (Tile* neighbor in current->GetNeighbors())
 		{
@@ -452,14 +465,25 @@ vector<Tile*> Game::Pathfind()
 				newPathLength += 14;
 			else
 				newPathLength += 10;
+
 			if (neighbor->GetType() == 1 || find(closed.begin(), closed.end(), neighbor) != closed.end())
 				; //Skip
 			else if (newPathLength < CheckPathLength(neighbor, 0) || find(open.begin(), open.end(), neighbor) == open.end())
 			{
+				neighbor->SetPathValues(newPathLength, GetDistanceCost(neighbor, target));
+				neighbor->SetPathParent(current);
 
+				if (find(open.begin(), open.end(), neighbor) == open.end())
+				{
+					open.push_back(neighbor);
+				}
 			}
 		}
 	}
+
+	vector<Tile*> path;
+	path = current->GetPath(path);
+	cout << path.size();
 
 	for each (Tile* t in open)
 	{
