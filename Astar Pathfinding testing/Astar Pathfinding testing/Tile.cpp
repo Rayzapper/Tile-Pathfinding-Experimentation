@@ -6,9 +6,12 @@ static int tileSize;
 Tile::Tile(int type, sf::Vector2f position)
 	:mType(type), mPosition(position)
 {
-	testFont.loadFromFile("Resources/calibri.ttf");
 	mGridPosition.x = mPosition.x / tileSize;
 	mGridPosition.y = mPosition.y / tileSize;
+	mHexGridPosition.x = mGridPosition.x;
+	mHexGridPosition.y = mGridPosition.y * 2;
+	if (mHexGridPosition.x % 2 == 1)
+		mHexGridPosition.y++;
 	mShape.setSize(sf::Vector2f(tileSize, tileSize));
 	sf::Color color, colorOutline;
 	if (mType == 0)
@@ -29,10 +32,6 @@ Tile::Tile(int type, sf::Vector2f position)
 	mHitBox.width = tileSize;
 	mHitBox.left = mPosition.x;
 	mHitBox.top = mPosition.y;
-
-	testText.setColor(sf::Color::Black);
-	testText.setPosition(mPosition.x, mPosition.y);
-	testText.setFont(testFont);
 }
 
 Tile::~Tile()
@@ -52,8 +51,6 @@ void Tile::Update()
 	mHitBox.top = mPosition.y;
 	mStart = false;
 	mGoal = false;
-	testText.setPosition(mPosition.x, mPosition.y);
-	testText.setString(to_string(testInt));
 }
 
 void Tile::Render()
@@ -69,7 +66,6 @@ void Tile::Render()
 	else if (mType == 1)
 		SetType(1);
 	window->draw(mShape);
-	/*window->draw(testText);*/
 }
 
 void Tile::ClearNeighbors()
@@ -146,6 +142,8 @@ bool Tile::GetOccupied() { return mOccupied; }
 bool Tile::GetMouseOver(sf::Vector2i mousePosition) { return mHitBox.contains(mousePosition); }
 
 sf::Vector2i Tile::GetGridPosition() { return mGridPosition; }
+
+sf::Vector2i Tile::GetHexGridPosition() { return mHexGridPosition; }
 
 PathValues Tile::GetPathValues() { return mPathValues; }
 

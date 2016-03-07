@@ -146,7 +146,6 @@ void Game::Update()
 			for (vector<Tile*>::size_type i = 0; i < path.size(); i++)
 			{
 				path[i]->SetPath(true);
-				//cout << path[i] << endl;
 			}
 		}
 		else if (resetButton.box.contains(mousePosition))
@@ -354,78 +353,65 @@ void Game::GridChange(int type)
 			}
 		}
 	}
-	//if (type == 2)
-	//{
-	//	cout << "hex" << endl;
-	//	gridType = HEX;
-	//	for (TileMap::size_type y = 0; y < tileMap.size(); y++)
-	//	{
-	//		for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
-	//		{
-	//			tileMap[y][x]->ClearNeighbors();
-	//			tileMap[y][x]->SetPosition(sf::Vector2f(x * tileSize, y * tileSize + 16 * (x % 2)));
-	//			if (x % 2 == 0)
-	//			{
-	//				if (y > 0)
-	//				{
-	//					if (x > 0)
-	//						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x - 1]);
-	//					tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
-	//					if (x < tileMap[y].size() - 1)
-	//						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x + 1]);
-	//				}
-	//				if (x > 0)
-	//				{
-	//					tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
-	//				}
-	//				if (y < tileMap.size() - 1)
-	//				{
-	//					tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
-	//				}
-	//				if (x < tileMap[y].size() - 1)
-	//				{
-	//					tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
-	//				}
-	//			}
-	//			else
-	//			{
-	//				if (x > 0)
-	//				{
-	//					tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
-	//				}
-	//				if (y > 0)
-	//				{
-	//					tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
-	//				}
-	//				if (x < tileMap[y].size() - 1)
-	//				{
-	//					tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
-	//				}
-	//				if (y < tileMap.size() - 1)
-	//				{
-	//					if (x > 0)
-	//						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x - 1]);
-	//					tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
-	//					if (x < tileMap[y].size() - 1)
-	//						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x + 1]);
-	//				}
-	//			}
-
-	//			//////////////////////////////////////////////////////////////////////
-	//			/*int xDifference, yDifference, distanceCost = 0;
-	//			xDifference = startTile->GetGridPosition().x - tileMap[y][x]->GetGridPosition().x;
-	//			xDifference = abs(xDifference);
-	//			yDifference = startTile->GetGridPosition().y - tileMap[y][x]->GetGridPosition().y;
-	//			yDifference = abs(yDifference);
-	//			if (startTile->GetGridPosition().x % 2 == 0)
-	//			{
-
-	//			}
-	//			tileMap[y][x]->testInt = distanceCost;*/
-	//			//////////////////////////////////////////////////////////////////////
-	//		}
-	//	}
-	//}
+	if (type == 2)
+	{
+		cout << "hex" << endl;
+		gridType = HEX;
+		for (TileMap::size_type y = 0; y < tileMap.size(); y++)
+		{
+			for (TileRow::size_type x = 0; x < tileMap[y].size(); x++)
+			{
+				tileMap[y][x]->ClearNeighbors();
+				tileMap[y][x]->SetPosition(sf::Vector2f(x * tileSize, y * tileSize + 16 * (x % 2)));
+				if (x % 2 == 0)
+				{
+					if (y > 0)
+					{
+						if (x > 0)
+							tileMap[y][x]->SetNeighbor(tileMap[y - 1][x - 1]);
+						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
+						if (x < tileMap[y].size() - 1)
+							tileMap[y][x]->SetNeighbor(tileMap[y - 1][x + 1]);
+					}
+					if (x > 0)
+					{
+						tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
+					}
+					if (y < tileMap.size() - 1)
+					{
+						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
+					}
+					if (x < tileMap[y].size() - 1)
+					{
+						tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
+					}
+				}
+				else
+				{
+					if (x > 0)
+					{
+						tileMap[y][x]->SetNeighbor(tileMap[y][x - 1]);
+					}
+					if (y > 0)
+					{
+						tileMap[y][x]->SetNeighbor(tileMap[y - 1][x]);
+					}
+					if (x < tileMap[y].size() - 1)
+					{
+						tileMap[y][x]->SetNeighbor(tileMap[y][x + 1]);
+					}
+					if (y < tileMap.size() - 1)
+					{
+						if (x > 0)
+							tileMap[y][x]->SetNeighbor(tileMap[y + 1][x - 1]);
+						tileMap[y][x]->SetNeighbor(tileMap[y + 1][x]);
+						if (x < tileMap[y].size() - 1)
+							tileMap[y][x]->SetNeighbor(tileMap[y + 1][x + 1]);
+					}
+				}
+			}
+		}
+	}
 }
 
 vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
@@ -533,11 +519,29 @@ int Game::GetDistanceCost(Tile *tile1, Tile *tile2)
 	else if (gridType == HEX)
 	{
 		int xDifference, yDifference;
-		xDifference = tile1X - tile2X;
-		xDifference = abs(xDifference);
-		yDifference = tile1Y - tile2Y;
-		yDifference = abs(yDifference);
-		//I AM TESTING THIS ELSEWHERE
+
+		tile1X = tile1->GetHexGridPosition().x;
+		tile1Y = tile1->GetHexGridPosition().y;
+		tile2X = tile2->GetHexGridPosition().x;
+		tile2Y = tile2->GetHexGridPosition().y;
+
+		xDifference = abs(tile1X - tile2X);
+		yDifference = abs(tile2Y - tile1Y);
+
+		distanceCost = 0;
+
+		distanceCost = yDifference;
+		if (xDifference % 2 == 1)
+			distanceCost++;
+		distanceCost /= 2;
+		if (xDifference % 2 == 0)
+			distanceCost += xDifference;
+		else
+			distanceCost += xDifference - 1;
+		if (xDifference >= 2 && yDifference >= 2)
+			distanceCost -= xDifference / 2;
+		if (distanceCost < xDifference)
+			distanceCost = xDifference;
 	}
 	return distanceCost;
 }

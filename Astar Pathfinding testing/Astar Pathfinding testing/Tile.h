@@ -36,16 +36,13 @@ public:
 	bool GetOccupied();
 	bool GetMouseOver(sf::Vector2i mousePosition);
 	sf::Vector2i GetGridPosition();
+	sf::Vector2i GetHexGridPosition();
 	PathValues GetPathValues();
 	Tile* GetPathParent();
 	vector<Tile*> GetPath(vector<Tile*> path);
-
-	int testInt;
-	sf::Text testText;
-	sf::Font testFont;
 private:
 	sf::Vector2f mPosition;
-	sf::Vector2i mGridPosition;
+	sf::Vector2i mGridPosition, mHexGridPosition;
 	int mType = 0;
 	vector<Tile*> mNeighborsVector;
 	sf::RectangleShape mShape;
