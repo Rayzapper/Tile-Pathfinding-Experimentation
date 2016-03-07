@@ -1,11 +1,4 @@
-﻿  Tile.cpp
-c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\tile.cpp(9): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\tile.cpp(10): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\tile.cpp(15): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\tile.cpp(33): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\tile.cpp(34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\tile.cpp(51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Game.cpp
+﻿  Game.cpp
 c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(48): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(49): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(218): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
@@ -15,7 +8,4 @@ c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimen
 c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(307): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(328): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
 c:\users\rasmus\documents\visual studio 2015\projects\tile-pathfinding-experimentation\astar pathfinding testing\astar pathfinding testing\game.cpp(365): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Main.cpp
   Astar Pathfinding testing.vcxproj -> C:\Users\Rasmus\Documents\Visual Studio 2015\Projects\Tile-Pathfinding-Experimentation\Astar Pathfinding testing\Debug\Astar Pathfinding testing.exe

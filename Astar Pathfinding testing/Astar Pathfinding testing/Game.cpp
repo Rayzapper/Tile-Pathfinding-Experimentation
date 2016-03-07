@@ -421,11 +421,16 @@ vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
 		closed;			//Nodes that have been evaluated.
 	start->SetPathValues(0, GetDistanceCost(start, target));
 	open.push_back(start);
-	bool loop = true;
+	bool loop = true, failed = false;
 
 	Tile *current = start;
-	while (loop)
+	while (loop && !failed)
 	{
+		if (open.size() == 0)
+		{
+			failed = true;
+			break;
+		}
 		current = open[0];
 		for (vector<Tile*>::size_type i = 0; i < open.size(); i++)
 		{
@@ -457,6 +462,7 @@ vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
 			else if (newPathLength < CheckPathLength(neighbor, 0) || find(open.begin(), open.end(), neighbor) == open.end())
 			{
 				neighbor->SetPathValues(newPathLength, GetDistanceCost(neighbor, target));
+				//if newPathLength == CheckPathLength(neighbor, 0) Put a random chance on this to create more random Paths.
 				neighbor->SetPathParent(current);
 
 				if (find(open.begin(), open.end(), neighbor) == open.end())
@@ -468,6 +474,22 @@ vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
 	}
 
 	vector<Tile*> path;
+	if (failed)
+		cout << "No Path!" << endl;
+	if (failed)
+	{
+		for each (Tile* t in open)
+		{
+			t->SetPathParent(nullptr);
+			t->SetPathValues(0, 0);
+		}
+		for each (Tile* t in closed)
+		{
+			t->SetPathParent(nullptr);
+			t->SetPathValues(0, 0);
+		}
+		return path;
+	}
 	path = current->GetPath(path);
 	cout << path.size();
 
