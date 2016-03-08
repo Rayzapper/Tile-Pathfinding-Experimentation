@@ -490,6 +490,7 @@ vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
 		}
 		return path;
 	}
+	path.push_back(current);
 	path = current->GetPath(path);
 	cout << path.size();
 
