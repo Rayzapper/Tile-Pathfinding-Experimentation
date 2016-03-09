@@ -462,7 +462,7 @@ vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
 			else if (newPathLength < CheckPathLength(neighbor, 0) || find(open.begin(), open.end(), neighbor) == open.end())
 			{
 				neighbor->SetPathValues(newPathLength, GetDistanceCost(neighbor, target));
-				//if newPathLength == CheckPathLength(neighbor, 0) Put a random chance on this to create more random Paths.
+				//if (newPathLength == CheckPathLength(neighbor, 0)) Put a random chance on this to create more random Paths.
 				neighbor->SetPathParent(current);
 
 				if (find(open.begin(), open.end(), neighbor) == open.end())
@@ -490,8 +490,8 @@ vector<Tile*> Game::Pathfind(Tile *start, Tile *target)
 		}
 		return path;
 	}
-	path.push_back(current);
 	path = current->GetPath(path);
+	path.push_back(current);
 	cout << path.size();
 
 	for each (Tile* t in open)
